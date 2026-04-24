@@ -5,6 +5,8 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+from sqlalchemy import select
+from werkzeug.security import generate_password_hash, check_password_hash
 
 api = Blueprint('api', __name__)
 
@@ -20,3 +22,36 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+
+@api.route('/auth', methods=['POST'])
+def auth():
+    # verificacion de datos
+    body = request.get_json()
+    if not body["email"] or not body["password"]:
+        return jsonify({"success": False, "data": "missing data"}), 403
+    # verificacion de si existe el usuario
+    user = db.session.execute(select(User).where(
+        User.email == body["email"])).scalar_one_or_none
+    if body['type'] == 'register':
+        if user:
+            return jsonify({"success": False, "data": "email taken"}), 403
+
+        # hasheamos contraseña
+        hashed = generate_password_hash(body['password'])
+
+        new_user = User(
+            email=body["email"],
+            password=hashed,
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({"success": True, "data": "All Ok"}), 201
+
+    if body['type'] == 'loggin':
+        if not user:
+            return jsonify({"success": False, "data": "email not found"}), 404
+        #comparación de contraseñas
+        if not check_password_hash(user.password body["password"]):
+            return jsonify({"success": False, "data": "email password is wrong"}), 401
+        return jsonify({"success": True, "data": "All Ok"}), 201
