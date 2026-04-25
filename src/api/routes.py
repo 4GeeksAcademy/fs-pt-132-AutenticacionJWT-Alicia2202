@@ -7,6 +7,9 @@ from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from sqlalchemy import select
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 api = Blueprint('api', __name__)
 
@@ -32,7 +35,8 @@ def auth():
         return jsonify({"success": False, "data": "missing data"}), 403
     # verificacion de si existe el usuario
     user = db.session.execute(select(User).where(
-        User.email == body["email"])).scalar_one_or_none
+        User.email == body["email"])).scalar_one_or_none()
+   
     if body['type'] == 'register':
         if user:
             return jsonify({"success": False, "data": "email taken"}), 403
@@ -48,10 +52,14 @@ def auth():
         db.session.commit()
         return jsonify({"success": True, "data": "All Ok"}), 201
 
-    if body['type'] == 'loggin':
+    if body['type'] == 'login':
         if not user:
             return jsonify({"success": False, "data": "email not found"}), 404
+        
+        
         #comparación de contraseñas
-        if not check_password_hash(user.password body["password"]):
+
+        if not check_password_hash(user.password, body["password"]):
             return jsonify({"success": False, "data": "email password is wrong"}), 401
-        return jsonify({"success": True, "data": "All Ok"}), 201
+        token = create_access_token(identity= str(user.id))
+        return jsonify({"success": True, "data": user.serialize(),"token":token}), 201
