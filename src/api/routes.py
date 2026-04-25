@@ -63,3 +63,13 @@ def auth():
             return jsonify({"success": False, "data": "email password is wrong"}), 401
         token = create_access_token(identity= str(user.id))
         return jsonify({"success": True, "data": user.serialize(),"token":token}), 201
+    return jsonify({"success":False, "data": "missing data?"}),418
+
+@api.route('/me', methods=["GET"])
+@jwt_required()
+def get_me():
+    id = get_jwt_identity ()  #Esto es para extraer el token=id del usuario
+    user = db.session.get(User,id)
+    if not user:
+        return jsonify({"success": False, "data": 'what sent?'}), 418
+    return jsonify({"success": True, "data":user.seralize()})

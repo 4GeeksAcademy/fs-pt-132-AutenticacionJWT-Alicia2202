@@ -1,8 +1,13 @@
 import { useState } from "react"
 import authService from "../services/auth.service"
+import { useNavigate } from "react-router-dom"
+import useGlobalReducer from "../hooks/useGlobalReducer"
+
+
 
 const Auth = () =>{
-
+    const{store, dispatch}= useGlobalReducer;
+    const navigate = useNavigate();
     const [formData, setFormData] = useState ({
         email: '',
         password:'',
@@ -15,9 +20,15 @@ const Auth = () =>{
 
     const handleSubmit = e => {
         e.preventDefault()
-        authService.auth(formData).then(data=> console.log(data))
-        console.log(formData)
-    }
+        authService.auth(formData).then(data=> dispatch({
+            type:'auth',
+            payload: {
+                user:data.data
+            }
+        }),
+        navigate('/private')
+    )
+    };
 
     const handleChange = e => {
         const {name, value} =e.target; 
