@@ -6,7 +6,7 @@ import useGlobalReducer from "../hooks/useGlobalReducer"
 
 
 const Auth = () =>{
-    const{store, dispatch}= useGlobalReducer;
+    const{dispatch}= useGlobalReducer;
     const navigate = useNavigate();
     const [formData, setFormData] = useState ({
         email: '',
@@ -26,8 +26,9 @@ const Auth = () =>{
                 user:data.data
             }
         }),
+       
         navigate('/private')
-    )
+    ) 
     };
 
     const handleChange = e => {

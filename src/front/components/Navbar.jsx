@@ -9,9 +9,17 @@ export const Navbar = () => {
 					<span className="navbar-brand mb-0 h1">React Boilerplate</span>
 				</Link>
 				<div className="ml-auto">
+
 					<Link to="/auth">
 						<button className="btn btn-primary">Login</button>
 					</Link>
+				</div>
+
+				<div className="ml-auto">
+					
+					{localStorage.getItem('token')&&<Link to="/private">
+						Private
+					</Link>}
 				</div>
 			</div>
 		</nav>
