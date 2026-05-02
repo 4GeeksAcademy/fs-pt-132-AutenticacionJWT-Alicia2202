@@ -32,7 +32,7 @@ const Private = () => {
     }
     return(
         <div>Area private
-            <h1>Welcome{store.user?.email}</h1>
+            <h1>Welcome {store.user?.email}</h1>
             <button onClick={handleLogout}>Logout</button>
         </div>
 

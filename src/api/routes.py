@@ -72,4 +72,4 @@ def get_me():
     user = db.session.get(User,id)
     if not user:
         return jsonify({"success": False, "data": 'what sent?'}), 418
-    return jsonify({"success": True, "data":user.seralize()})
+    return jsonify({"success": True, "data":user.serialize()})

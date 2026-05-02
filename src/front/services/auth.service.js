@@ -27,7 +27,7 @@ authService.getMe = async () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization":"Bearer" + localStorage.getItem('token') //si tiene la ruta de @jwt_required() se envía la autorización con el bearer token
+        "Authorization":"Bearer " + localStorage.getItem('token') //si tiene la ruta de @jwt_required() se envía la autorización con el bearer token. Cuidado es "Bearer " con espacio porque si no lee el token junto con Bearer.
       },
       
     });

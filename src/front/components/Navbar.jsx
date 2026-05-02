@@ -1,7 +1,19 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useGlobalReducer from "../hooks/useGlobalReducer"
 
 export const Navbar = () => {
+	const {store} = useGlobalReducer()
+	const navigate = useNavigate();
+	const handlePrivate = () => {
+		const tokenInStorage = localStorage.getItem('token');
+		const userInStore = store.user;
+		if (tokenInStorage && userInStore){
+			navigate("/private");
 
+		}else {
+			navigate("/auth");
+		}
+	}
 	return (
 		<nav className="navbar navbar-light bg-light">
 			<div className="container">
@@ -16,10 +28,14 @@ export const Navbar = () => {
 				</div>
 
 				<div className="ml-auto">
-					
-					{localStorage.getItem('token')&&<Link to="/private">
+					{/* <button>
+					{localStorage.getItem('token')&&<onclick to="/private">
 						Private
 					</Link>}
+					</button> */}
+					<button className="btn btn-secondary" onClick={handlePrivate}>
+    					Private
+					</button>
 				</div>
 			</div>
 		</nav>

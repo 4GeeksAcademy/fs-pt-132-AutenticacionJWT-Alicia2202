@@ -6,7 +6,7 @@ import useGlobalReducer from "../hooks/useGlobalReducer"
 
 
 const Auth = () =>{
-    const{dispatch}= useGlobalReducer;
+    const{dispatch}= useGlobalReducer ();
     const navigate = useNavigate();
     const [formData, setFormData] = useState ({
         email: '',
