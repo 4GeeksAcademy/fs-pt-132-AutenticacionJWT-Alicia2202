@@ -20,56 +20,63 @@ const Auth = () => {
 
     const handleSubmit = e => {
         e.preventDefault()
-        authService.auth(formData).then(data => dispatch({
-            type: 'auth',
-            payload: {
-                user: data.data
+        authService.auth(formData).then(data =>{ 
+            if (formData.type === 'register'){
+                return authService.auth({...formData, type:'login'})
             }
-        }),
+            return data;
+        })
+        .then(data=>{
+            dispatch({
+                type: 'auth',
+                payload: {
+                    user: data.data
+                }
+            });
 
-            navigate('/private')
-        )
-    };
-
-    const handleChange = e => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value })
+            navigate('/private');
+        });
     }
 
-    return (
-        <div className="container mt-5">
-            <div className="row justify-content-center">
-                <div className="col-lg-8 col-md-8 col-sm-12">
-                    <div className="card shadow p-3 mb-5 bg-white rounded p-4 ">
-                        <h5 className="card-tittle text-center mb-4 text-capitalize">{formData.type}</h5>
+const handleChange = e => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value })
+}
 
-                        <form onSubmit={handleSubmit}>
-                            <div className="mb-4">
-                                <label htmlFor="email" className="form-label">Email</label>
-                                <input className="form-control email" id="email" name="email" value={formData.email} onChange={handleChange} type="email" placeholder="example@email.com" />
-                            </div>
-                            <div className="mb-4">
-                                <label htmlFor="password" className="form-label">Password</label>
-                                <input className="form-control password" id="password" name="password" value={formData.password} onChange={handleChange} type="password" placeholder="Enter your password" />
-                            </div>
-                            <div className="row">
-                                <div className="col-lg-12 col-md-12 col-sm-12">
-                                    <div className="mb-3">
-                                        <input className="form-control shadow-sm bg-primary text-white rounded" type="submit" />
-                                    </div>
-                                    <div className="mb-1 mt-1">
-                                        <button onClick={handleType} type="button" className="btn btn-link btn-sm text-decoration-none">
-                                            Switch to {formData.type === 'register' ? 'login' : "register"}
-                                        </button>
-                                    </div>
+return (
+    <div className="container mt-5">
+        <div className="row justify-content-center">
+            <div className="col-lg-8 col-md-8 col-sm-12">
+                <div className="card shadow p-3 mb-5 bg-white rounded p-4 ">
+                    <h5 className="card-tittle text-center mb-4 text-capitalize">{formData.type}</h5>
+
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                            <label htmlFor="email" className="form-label">Email</label>
+                            <input className="form-control email" id="email" name="email" value={formData.email} onChange={handleChange} type="email" placeholder="example@email.com" />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="password" className="form-label">Password</label>
+                            <input className="form-control password" id="password" name="password" value={formData.password} onChange={handleChange} type="password" placeholder="Enter your password" />
+                        </div>
+                        <div className="row">
+                            <div className="col-lg-12 col-md-12 col-sm-12">
+                                <div className="mb-3">
+                                    <input className="form-control shadow-sm bg-primary text-white rounded" type="submit" />
+                                </div>
+                                <div className="mb-1 mt-1">
+                                    <button onClick={handleType} type="button" className="btn btn-link btn-sm text-decoration-none">
+                                        Switch to {formData.type === 'register' ? 'login' : "register"}
+                                    </button>
                                 </div>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    )
+    </div>
+)
 }
 
 export default Auth

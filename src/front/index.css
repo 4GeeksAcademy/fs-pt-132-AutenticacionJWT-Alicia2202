@@ -1,0 +1,8 @@
+.logout,.button-logout, .username{
+    color: rgb(116, 192, 252)
+    
+}
+
+.button-logout{
+    border: 0.1rem solid rgb(116, 192, 252)  !important;
+}
